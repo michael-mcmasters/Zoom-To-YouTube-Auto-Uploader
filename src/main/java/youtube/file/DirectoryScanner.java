@@ -63,6 +63,18 @@ public class DirectoryScanner implements IDirectoryScanner {
         return null;
     }
 
+    public void moveFileToFolder(File file, int place) {
+        Path pathFrom = file.toPath();
+        Path pathTo = Paths.get(videosUnableToUploadName.toString() + "/" + file.getName());
+        try {
+            Files.move(pathFrom, pathTo);
+            System.out.println("yes");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("nope");
+        }
+    }
+
     private boolean isMP4File(File file) {
         String fileName = file.getName();
         System.out.println("Name is " + fileName);
@@ -72,39 +84,6 @@ public class DirectoryScanner implements IDirectoryScanner {
         String fileType = split[split.length - 1];      // Get text after the last "." because that is the file type.
         if (fileType.equals("mp4")) return true;
         return false;
-    }
-
-    public void moveFileToFolder(File file, int place) {
-//        if (place == 0) {
-//            Files.move(file, videosUploadedName, StandardCopyOption.REPLACE_EXISTING);
-
-//            Path temp = Files.move
-//                    (Paths.get("C:\\Users\\Mayank\\Desktop\\44.txt"),
-//                            Paths.get("C:\\Users\\Mayank\\Desktop\\dest\\445.txt"));
-
-
-        String path = videosUnableToUploadName.toString() + "/" + file.getName();
-            try {
-                Files.move(Paths.get(file.toString()), Paths.get(path));
-                System.out.println("yes");
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("nope");
-            }
-
-
-            //String path = videosUnableToUploadName.toPath() + file.getName();
-//        Files.move(file.toPath(), path);
-//        System.out.println("Worked");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            System.out.println("Didn't work");
-//        }
-
-
-//        } else if (place == 1) {
-//
-//        }
     }
 
 }
