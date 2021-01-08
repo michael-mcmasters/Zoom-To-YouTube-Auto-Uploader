@@ -31,6 +31,8 @@ public class Handler {
             if (file != null) {
                 System.out.println("Found new file. Pausing program for x minutes before uploading to give mp4 file time to decode.");
 
+                directoryScanner.moveFileToFolder(file, 0);
+
                 // Set one hour delay for zoom video to decode.
                 delay(3600);
 
