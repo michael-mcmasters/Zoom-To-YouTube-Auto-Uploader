@@ -32,6 +32,10 @@ public class DirectoryScanner implements IDirectoryScanner {
         // Files weren't created. Check if they are already created from previous time program was ran.
         int detectedFolders = 0;
         File[] files = directory.listFiles();
+        if (files == null) {
+            System.out.println("Unable to verify or create subfolders that videos are supposed to be moved to.");
+            return;
+        }
         for (File f : files) {
             if (f.equals(videosUploadedName) || f.equals(videosUnableToUploadName)) {
                 detectedFolders++;
@@ -40,21 +44,19 @@ public class DirectoryScanner implements IDirectoryScanner {
         if (detectedFolders == 2) {
             System.out.println("Verified subfolders are in directory.");
         } else {
-            // Should not happen: Files were not created and could not verify if they already exist.
             System.out.println("Unable to verify or create subfolders that videos are supposed to be moved to.");
         }
     }
 
     public File searchForNewFile() {
-//        File dir = new File(directory);
-//        File[] files = dir.listFiles();
-//        if (files == null) return null;
-//
-//        for (File file : files) {
-//            if (isMP4File(file)) {
-//
-//            }
-//        }
+        File[] files = directory.listFiles();
+        if (files == null) return null;
+
+        for (File f : files) {
+            if (isMP4File(f)) {
+                return f;
+            }
+        }
 
         return null;
     }
@@ -65,9 +67,8 @@ public class DirectoryScanner implements IDirectoryScanner {
         String[] split = fileName.split("\\.");
         if (split.length < 2) return false;
 
-        String fileType = split[split.length - 1];
-        if (fileType.equals("mp4"))
-            return true;
+        String fileType = split[split.length - 1];      // Get text after the last "." because that is the file type.
+        if (fileType.equals("mp4")) return true;
         return false;
     }
 
