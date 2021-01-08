@@ -11,6 +11,8 @@ import java.nio.file.*;
 public class DirectoryScanner implements IDirectoryScanner {
 
     private ITrackedVideosLogger trackedVideosLogger;
+
+    // Note! All file paths are relative to this project's location. Use ../ to go out of root folder.
     private static final File directory = new File("../../");
     private static final File videosUploadedName = new File(directory.getPath() + "/videos-uploaded");
     private static final File videosUnableToUploadName = new File(directory.getPath() + "/videos-unable-to-upload");
@@ -51,6 +53,9 @@ public class DirectoryScanner implements IDirectoryScanner {
         }
     }
 
+
+
+
     public File searchForNewFile() {
         File[] files = directory.listFiles();
         if (files == null) return null;
@@ -72,6 +77,9 @@ public class DirectoryScanner implements IDirectoryScanner {
         if (fileType.equals("mp4")) return true;
         return false;
     }
+
+
+
 
     public void moveFileToFolder(File file, Folder folder) {
         Path pathFrom = file.toPath();
