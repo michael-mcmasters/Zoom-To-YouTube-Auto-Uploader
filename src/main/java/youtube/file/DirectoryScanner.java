@@ -1,5 +1,6 @@
 package youtube.file;
 
+import youtube.file.enums.Folder;
 import youtube.file.interfaces.IDirectoryScanner;
 import youtube.file.interfaces.ITrackedVideosLogger;
 
@@ -59,31 +60,46 @@ public class DirectoryScanner implements IDirectoryScanner {
                 return f;
             }
         }
-
         return null;
-    }
-
-    public void moveFileToFolder(File file, int place) {
-        Path pathFrom = file.toPath();
-        Path pathTo = Paths.get(videosUnableToUploadName.toString() + "/" + file.getName());
-        try {
-            Files.move(pathFrom, pathTo);
-            System.out.println("yes");
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("nope");
-        }
     }
 
     private boolean isMP4File(File file) {
         String fileName = file.getName();
-        System.out.println("Name is " + fileName);
         String[] split = fileName.split("\\.");
         if (split.length < 2) return false;
 
         String fileType = split[split.length - 1];      // Get text after the last "." because that is the file type.
         if (fileType.equals("mp4")) return true;
         return false;
+    }
+
+    public void moveFileToFolder(File file, Folder folder) {
+        Path pathFrom = file.toPath();
+        Path pathTo = getPathTo(file, folder);
+        try {
+            Files.move(pathFrom, pathTo);
+            System.out.println("File successfully moved to folder.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error: Unable to move file to folder.");
+        }
+    }
+
+    // toString() returns file path. file.getName() returns file name. So it comes out as something similar to ...
+    // toString:        "../../documents/zoom-videos"
+    // file.getName():  "/recorded-video-1.9.21.mp4"
+    // Concatenated together equals: "../../documents/zoom-videos/recorded-video-1.9.21.mp4"
+    private Path getPathTo(File file, Folder folder) {
+        String pathStr = "";
+        switch(folder) {
+            case VIDEOS_UNABLE_TO_UPLOAD:
+                pathStr = videosUnableToUploadName.toString() + "/" + file.getName();
+                break;
+            case VIDEOS_UPLOADED:
+                pathStr = videosUploadedName.toString() + "/" + file.getName();
+                break;
+        }
+        return Paths.get(pathStr);
     }
 
 }

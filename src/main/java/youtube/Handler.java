@@ -4,6 +4,7 @@ import youtube.api.Uploader;
 import youtube.api.interfaces.IUploader;
 import youtube.file.DirectoryScanner;
 import youtube.file.TrackedVideosLogger;
+import youtube.file.enums.Folder;
 import youtube.file.interfaces.IDirectoryScanner;
 import youtube.file.interfaces.ITrackedVideosLogger;
 
@@ -29,9 +30,10 @@ public class Handler {
             System.out.println("\nBegin loop ...");
             File file = directoryScanner.searchForNewFile();
             if (file != null) {
-                System.out.println("Found new file. Pausing program for x minutes before uploading to give mp4 file time to decode.");
+                System.out.println("Found new file, + " + file.getName());
+                System.out.println("Pausing program for x minutes before uploading to give mp4 file time to decode.");
 
-                directoryScanner.moveFileToFolder(file, 0);
+                directoryScanner.moveFileToFolder(file, Folder.VIDEOS_UNABLE_TO_UPLOAD);
 
                 // Set one hour delay for zoom video to decode.
                 delay(3600);
