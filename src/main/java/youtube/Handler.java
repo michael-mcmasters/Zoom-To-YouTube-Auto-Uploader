@@ -26,7 +26,7 @@ public class Handler {
         System.out.println("Handler loop initiated. Running engine ...");
 
         while (true) {
-            System.out.println("\n Begin loop ...");
+            System.out.println("\nBegin loop ...");
             File file = directoryScanner.searchForNewFile();
             if (file != null) {
                 System.out.println("Found new file. Pausing program before uploading in case mp4 file needs to decode.");
@@ -43,7 +43,8 @@ public class Handler {
                 //System.out.println("Success! Video uploaded to Youtube.");
                 //System.out.println("Upload to Youtube failed");
             } else {
-                System.out.println("No files found.");
+                System.out.println("No new file found.");
+                System.out.println("End loop. Will loop again in x minutes.");
             }
 
             // Delay so loop isn't running constantly.
