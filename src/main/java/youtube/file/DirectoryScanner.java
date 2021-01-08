@@ -8,9 +8,9 @@ import java.io.File;
 public class DirectoryScanner implements IDirectoryScanner {
 
     private ITrackedVideosLogger trackedVideosLogger;
-    private static final String directory = "../../";
-    private static final String videosUploadedName = "videos-uploaded";
-    private static final String videosUnableToUploadName = "videos-unable-to-upload";
+    private static final File directory = new File("../../");
+    private static final File videosUploadedName = new File(directory.getPath() + "/videos-uploaded");
+    private static final File videosUnableToUploadName = new File(directory.getPath() + "/videos-unable-to-upload");
 
     public DirectoryScanner(ITrackedVideosLogger trackedVideosLogger) {
         this.trackedVideosLogger = trackedVideosLogger;
@@ -19,13 +19,56 @@ public class DirectoryScanner implements IDirectoryScanner {
 
     // Creates 2 folders in directory where video files will go in. Does nothing if folders already exist.
     private void verifyFoldersInDirectory() {
-        new File(directory + videosUploadedName).mkdir();
-        new File(directory + videosUnableToUploadName).mkdir();
-        System.out.println("Verified subfolders, " + videosUploadedName + " and " + videosUnableToUploadName + ", are in directory. " + "Videos will be uploaded to these folders depending on if they were successfully uploaded or not.");
+        System.out.println("Verifying subfolders ...");
+        boolean fileOneCreated = videosUploadedName.mkdir();
+        boolean fileTwoCreated = videosUnableToUploadName.mkdir();
+        if (fileOneCreated && fileTwoCreated) {
+            System.out.println("Created and verified subfolders, " + videosUploadedName.getName() +
+                    " and " + videosUnableToUploadName.getName() + ", are in directory. " +
+                    "Videos will be moved to these folders depending on if they were successfully uploaded or not.");
+            return;
+        }
+
+        // Files weren't created. Check if they are already created from previous time program was ran.
+        int detectedFolders = 0;
+        File[] files = directory.listFiles();
+        for (File f : files) {
+            if (f.equals(videosUploadedName) || f.equals(videosUnableToUploadName)) {
+                detectedFolders++;
+            }
+        }
+        if (detectedFolders == 2) {
+            System.out.println("Verified subfolders are in directory.");
+        } else {
+            // Should not happen: Files were not created and could not verify if they already exist.
+            System.out.println("Unable to verify or create subfolders that videos are supposed to be moved to.");
+        }
     }
 
     public File searchForNewFile() {
+//        File dir = new File(directory);
+//        File[] files = dir.listFiles();
+//        if (files == null) return null;
+//
+//        for (File file : files) {
+//            if (isMP4File(file)) {
+//
+//            }
+//        }
+
         return null;
+    }
+
+    private boolean isMP4File(File file) {
+        String fileName = file.getName();
+        System.out.println("Name is " + fileName);
+        String[] split = fileName.split("\\.");
+        if (split.length < 2) return false;
+
+        String fileType = split[split.length - 1];
+        if (fileType.equals("mp4"))
+            return true;
+        return false;
     }
 
 }

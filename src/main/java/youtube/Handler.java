@@ -29,7 +29,7 @@ public class Handler {
             System.out.println("\nBegin loop ...");
             File file = directoryScanner.searchForNewFile();
             if (file != null) {
-                System.out.println("Found new file. Pausing program before uploading in case mp4 file needs to decode.");
+                System.out.println("Found new file. Pausing program for x minutes before uploading to give mp4 file time to decode.");
 
                 // Set one hour delay for zoom video to decode.
                 delay(3600);
