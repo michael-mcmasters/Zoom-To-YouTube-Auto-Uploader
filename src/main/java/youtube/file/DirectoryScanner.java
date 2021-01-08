@@ -9,50 +9,21 @@ public class DirectoryScanner implements IDirectoryScanner {
 
     private ITrackedVideosLogger trackedVideosLogger;
     private static final String directoryToScan = "../../";
-    private static final String videosUploadedName = "video-uploaded";
-    private static final String videosUnableToUploadName = "video-unable-to-upload";
+    private static final String videosUploadedName = "videos-uploaded";
+    private static final String videosUnableToUploadName = "videos-unable-to-upload";
 
     public DirectoryScanner(ITrackedVideosLogger trackedVideosLogger) {
         this.trackedVideosLogger = trackedVideosLogger;
         verifyFoldersInDirectory();
     }
 
-    // If first time running program, it will create subfolders.
-    // Returns false if folders are not in directory and were not able to be created.
-    public boolean verifyFoldersInDirectory() {
-        System.out.println("Checking if subfolders exist ...");
-        File directory = new File(directoryToScan);
-        boolean foldersExist = verifyFoldersExist(directory);
-        if (!foldersExist) {
-            foldersExist = createFolders();
-        }
-        return foldersExist;
-    }
-
-    private boolean verifyFoldersExist(File directory) {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            System.out.println("Error: Could not find any files in the given directory.");
-            return false;
-        }
-
-        int counter = 0;
-        for (File f : files) {
-            if (f.getName().equals(videosUploadedName) || f.getName().equals(videosUnableToUploadName)) {
-                counter++;
-            }
-            if (counter == 2) {
-                System.out.println("Verified that the needed subfolders are in the directory.");
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean createFolders() {
-
-        System.out.println("Created 2 subfolders named " + videosUploadedName + " and " + videosUnableToUploadName + ". " + "Videos will be uploaded to these folders depending on if they were successfully uploaded or not.");
-        return false;
+    // Creates 2 folders in directory where video files will go in. If folders already exist, does nothing.
+    private void verifyFoldersInDirectory() {
+        File child1 = new File(directoryToScan + videosUploadedName);
+        File child2 = new File(directoryToScan + videosUnableToUploadName);
+        child1.mkdir();
+        child2.mkdir();
+        System.out.println("Verified subfolders, " + videosUploadedName + " and " + videosUnableToUploadName + ", are in directory. " + "Videos will be uploaded to these folders depending on if they were successfully uploaded or not.");
     }
 
     public File searchForNewFile() {
