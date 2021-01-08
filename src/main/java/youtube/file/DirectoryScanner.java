@@ -8,7 +8,7 @@ import java.io.File;
 public class DirectoryScanner implements IDirectoryScanner {
 
     private ITrackedVideosLogger trackedVideosLogger;
-    private static final String directoryToScan = "../../";
+    private static final String directory = "../../";
     private static final String videosUploadedName = "videos-uploaded";
     private static final String videosUnableToUploadName = "videos-unable-to-upload";
 
@@ -17,12 +17,10 @@ public class DirectoryScanner implements IDirectoryScanner {
         verifyFoldersInDirectory();
     }
 
-    // Creates 2 folders in directory where video files will go in. If folders already exist, does nothing.
+    // Creates 2 folders in directory where video files will go in. Does nothing if folders already exist.
     private void verifyFoldersInDirectory() {
-        File child1 = new File(directoryToScan + videosUploadedName);
-        File child2 = new File(directoryToScan + videosUnableToUploadName);
-        child1.mkdir();
-        child2.mkdir();
+        new File(directory + videosUploadedName).mkdir();
+        new File(directory + videosUnableToUploadName).mkdir();
         System.out.println("Verified subfolders, " + videosUploadedName + " and " + videosUnableToUploadName + ", are in directory. " + "Videos will be uploaded to these folders depending on if they were successfully uploaded or not.");
     }
 
