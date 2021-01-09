@@ -1,5 +1,6 @@
 package youtube;
 
+import youtube.api.ApiExample;
 import youtube.api.Uploader;
 import youtube.api.interfaces.IUploader;
 import youtube.file.DirectoryScanner;
@@ -9,6 +10,8 @@ import youtube.file.interfaces.IDirectoryScanner;
 import youtube.file.interfaces.ITrackedVideosLogger;
 
 import java.io.File;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 public class Handler {
 
@@ -36,7 +39,20 @@ public class Handler {
 
                 System.out.println("Program resume. Preparing to upload to Youtube ...");
 
+
                 boolean videoUploaded = false;
+                try {
+                    ApiExample.main(file);
+                    videoUploaded = true;
+                } catch (GeneralSecurityException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                // 10 minute delay because file can't be moved while it is uploading.
+                delay(600);
                 if (videoUploaded) {
                     System.out.println("Success! Video uploaded to Youtube.");
                     directoryScanner.moveFileToFolder(file, Folder.VIDEOS_UPLOADED);

@@ -8,11 +8,8 @@ import java.security.GeneralSecurityException;
 public class Main {
 
     public static void main(String[] args) throws GeneralSecurityException, IOException {
-        //Handler handler = new Handler();
-        //handler.parseAndUploadNewFiles();
-
-        String[] strArr = {};
-        ApiExample.main(strArr);
+        Handler handler = new Handler();
+        handler.parseAndUploadNewFiles();
     }
 
 }

@@ -1,5 +1,5 @@
 package youtube.api; /**
- * Sample Java code for youtube.channels.list
+ * Sample Java code for youtube.videos.insert
  * See instructions for running these code samples locally:
  * https://developers.google.com/explorer-help/guides/code_samples#java
  */
@@ -11,12 +11,19 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.ChannelListResponse;
 
+import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoSnippet;
+import com.google.api.services.youtube.model.VideoStatus;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,9 +32,9 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class ApiExample {
-    private static final String CLIENT_SECRETS= "/client_secret.json";          // Google Doc is wrong. Put "/" in this string so path works if this API class is not at the root directory.
+    private static final String CLIENT_SECRETS= "/client_secret.json";
     private static final Collection<String> SCOPES =
-            Arrays.asList("https://www.googleapis.com/auth/youtube.readonly");
+            Arrays.asList("https://www.googleapis.com/auth/youtube.upload");
 
     private static final String APPLICATION_NAME = "API code samples";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -72,13 +79,38 @@ public class ApiExample {
      *
      * @throws GeneralSecurityException, IOException, GoogleJsonResponseException
      */
-    public static void main(String[] args)
+    public static void main(File mediaFile)
             throws GeneralSecurityException, IOException, GoogleJsonResponseException {
         YouTube youtubeService = getService();
+
+        // Define the Video object, which will be uploaded as the request body.
+        Video video = new Video();
+
+        // Add the snippet object property to the Video object.
+        VideoSnippet snippet = new VideoSnippet();
+        snippet.setCategoryId("22");
+        snippet.setDescription("Description of uploaded video.");
+        snippet.setTitle("Test video upload.");
+        video.setSnippet(snippet);
+
+        // Add the status object property to the Video object.
+        VideoStatus status = new VideoStatus();
+        status.setPrivacyStatus("private");
+        video.setStatus(status);
+
+        // TODO: For this request to work, you must replace "YOUR_FILE"
+        //       with a pointer to the actual file you are uploading.
+        //       The maximum file size for this operation is 137438953472.
+        //File mediaFile = new File("YOUR_FILE");
+        InputStreamContent mediaContent =
+                new InputStreamContent("application/octet-stream",
+                        new BufferedInputStream(new FileInputStream(mediaFile)));
+        mediaContent.setLength(mediaFile.length());
+
         // Define and execute the API request
-        YouTube.Channels.List request = youtubeService.channels()
-                .list("snippet,contentDetails,statistics");
-        ChannelListResponse response = request.setId("UC_x5XG1OV2P6uZZ5FSM9Ttw").execute();
+        YouTube.Videos.Insert request = youtubeService.videos()
+                .insert("snippet,status", video, mediaContent);
+        Video response = request.execute();
         System.out.println(response);
     }
 }

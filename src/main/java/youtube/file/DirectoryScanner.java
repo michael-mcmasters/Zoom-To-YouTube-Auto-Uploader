@@ -88,8 +88,8 @@ public class DirectoryScanner implements IDirectoryScanner {
             Files.move(pathFrom, pathTo);
             System.out.println("File successfully moved to folder.");
         } catch (IOException e) {
+            System.out.println("Unable to move file " + file.getName() + " to folder. The problem may be that the file was still uploading when trying to move it.");
             e.printStackTrace();
-            System.out.println("Error: Unable to move file to folder.");
         }
     }
 
