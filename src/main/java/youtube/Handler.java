@@ -4,10 +4,8 @@ import youtube.api.ApiExample;
 import youtube.api.Uploader;
 import youtube.api.interfaces.IUploader;
 import youtube.file.DirectoryScanner;
-import youtube.file.TrackedVideosLogger;
 import youtube.file.enums.Folder;
 import youtube.file.interfaces.IDirectoryScanner;
-import youtube.file.interfaces.ITrackedVideosLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,12 +14,10 @@ import java.security.GeneralSecurityException;
 public class Handler {
 
     private IDirectoryScanner directoryScanner;
-    private ITrackedVideosLogger trackedVideosLogger;
     private IUploader uploader;
 
     public Handler() {
-        this.trackedVideosLogger = new TrackedVideosLogger();
-        this.directoryScanner = new DirectoryScanner(trackedVideosLogger);
+        this.directoryScanner = new DirectoryScanner();
         this.uploader = new Uploader();
     }
 

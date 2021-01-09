@@ -32,7 +32,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class ApiExample {
-    private static final String CLIENT_SECRETS= "/client_secret.json";
+    private static final String CLIENT_SECRETS= "/client_secret.json";      // Make sure to add "/" here to enable class to be in a package. Google Documentation is wrong.
     private static final Collection<String> SCOPES =
             Arrays.asList("https://www.googleapis.com/auth/youtube.upload");
 

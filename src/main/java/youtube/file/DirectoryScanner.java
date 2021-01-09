@@ -2,7 +2,6 @@ package youtube.file;
 
 import youtube.file.enums.Folder;
 import youtube.file.interfaces.IDirectoryScanner;
-import youtube.file.interfaces.ITrackedVideosLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,15 +9,12 @@ import java.nio.file.*;
 
 public class DirectoryScanner implements IDirectoryScanner {
 
-    private ITrackedVideosLogger trackedVideosLogger;
-
     // Note! All file paths are relative to this project's location. Use ../ to go out of root folder.
     private static final File directory = new File("../../");
     private static final File videosUploadedName = new File(directory.getPath() + "/videos-uploaded");
     private static final File videosUnableToUploadName = new File(directory.getPath() + "/videos-unable-to-upload");
 
-    public DirectoryScanner(ITrackedVideosLogger trackedVideosLogger) {
-        this.trackedVideosLogger = trackedVideosLogger;
+    public DirectoryScanner() {
         verifyFoldersInDirectory();
     }
 
