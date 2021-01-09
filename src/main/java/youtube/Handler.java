@@ -32,7 +32,7 @@ public class Handler {
             if (file != null) {
                 System.out.println("Found new file, + " + file.getName());
                 System.out.println("Pausing program for x minutes before uploading to give mp4 file time to decode.");
-                delay(3600);     // Set one hour delay for zoom video to decode.
+                //delay(3600);     // Set one hour delay for zoom video to decode.
 
                 System.out.println("Program resume. Preparing to upload to Youtube ...");
 
