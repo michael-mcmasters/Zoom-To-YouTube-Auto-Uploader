@@ -1,4 +1,4 @@
- /**
+package youtube.api; /**
  * Sample Java code for youtube.channels.list
  * See instructions for running these code samples locally:
  * https://developers.google.com/explorer-help/guides/code_samples#java
@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class ApiExample {
-    private static final String CLIENT_SECRETS= "client_secret.json";
+    private static final String CLIENT_SECRETS= "/client_secret.json";          // Google Doc is wrong. Put "/" in this string so path works if this API class is not at the root directory.
     private static final Collection<String> SCOPES =
             Arrays.asList("https://www.googleapis.com/auth/youtube.readonly");
 
