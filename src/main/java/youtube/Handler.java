@@ -15,8 +15,10 @@ import java.util.logging.Logger;
 public class Handler {
 
     private static final Logger logger = Logger.getGlobal();
+
     private IDirectoryScanner directoryScanner;
     private IUploader uploader;
+
 
     public Handler() {
         this.directoryScanner = new DirectoryScanner();
@@ -31,39 +33,47 @@ public class Handler {
             logger.info("Begin loop ...");
             File file = directoryScanner.searchForNewFile();
             if (file != null) {
-                logger.info("Found new file, " + file.getName());
-                logger.info("Pausing program for x minutes before uploading to give mp4 file time to decode.");
-                //delay(3600);     // Set one hour delay for zoom video to decode.
+                logger.info("Found new file, " + file.getName() + ". Pausing program for x minutes before uploading to give mp4 file time to decode.");
+                delay(3600);     // Set one hour delay for zoom video to decode.
 
-                logger.info("Program resume. Preparing to upload to Youtube ...");
-
-
-                boolean videoUploaded = false;
-//                try {
-//                    ApiExample.main(file);
-//                    videoUploaded = true;
-//                } catch (GeneralSecurityException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-
-
-                // 10 minute delay because file can't be moved while it is uploading.
-                delay(600);
-                if (videoUploaded) {
-                    logger.info("Success! Video uploaded to Youtube.");
-                    directoryScanner.moveFileToFolder(file, Folder.VIDEOS_UPLOADED);
-                } else {
-                    logger.info("Upload to Youtube failed");
-                    directoryScanner.moveFileToFolder(file, Folder.VIDEOS_UNABLE_TO_UPLOAD);
-                }
+                logger.info("Program resume.");
+                boolean uploadSuccessful = upload(file);
+                moveFileToFolder(file, uploadSuccessful);
             } else {
-                logger.info("No new file found.");
-                logger.info("End loop. Will loop again in x minutes.");
+                logger.info("Did not detect a file to upload.");
             }
 
-            delay(1800);     // Delay loop to only run every 30 minutes.
+            int delay = 1800;       // Delay 30 minutes so loop isn't running too often.
+            logger.info("End loop. Will loop again in " + delay + " milliseconds.");
+            delay(delay);
+        }
+    }
+
+    private boolean upload(File file) {
+        logger.info("Preparing to upload to Youtube ...");
+//        try {
+//            ApiExample.main(file);
+//            delay(600);      // 10 minute delay so that program doesn't move file while uploading. (Will cause exception otherwise.)
+//            logger.info("Success! Video uploaded.");
+//            return true;
+//        } catch (GeneralSecurityException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//
+//            e.printStackTrace();
+//        }
+//        logger.warning("Upload failed.");
+        return false;
+    }
+
+    // There are 2 folders. This moves the file to the success folder or the failed folder, so there is a directoy log of which videos are uploaded.
+    private void moveFileToFolder(File file, boolean uploadSuccessful) {
+        if (uploadSuccessful) {
+            logger.info("Moving file to + " + Folder.VIDEOS_UPLOADED.toString());
+            directoryScanner.moveFileToFolder(file, Folder.VIDEOS_UPLOADED);
+        } else {
+            logger.info("Moving file to + " + Folder.VIDEOS_UNABLE_TO_UPLOAD.toString());
+            directoryScanner.moveFileToFolder(file, Folder.VIDEOS_UNABLE_TO_UPLOAD);
         }
     }
 
@@ -72,7 +82,7 @@ public class Handler {
         try {
             Thread.sleep(milliseconds * 1000);
         } catch (InterruptedException e) {
-            System.out.println("Loop is running faster than expected. This may cause issues if the Zoom video is uploaded before it's been decoded");
+            logger.info("Loop is running faster than expected. This may cause issues if the Zoom video is uploaded before it's been decoded");
             e.printStackTrace();
         }
     }
