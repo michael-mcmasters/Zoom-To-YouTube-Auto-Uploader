@@ -6,8 +6,11 @@ import youtube.file.interfaces.IDirectoryScanner;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.logging.Logger;
 
 public class DirectoryScanner implements IDirectoryScanner {
+
+    private static final Logger logger = Logger.getGlobal();
 
     // Note! All file paths are relative to this project's location. Use ../ to go out of root folder.
     private static final File directory = new File("../../");
@@ -20,11 +23,11 @@ public class DirectoryScanner implements IDirectoryScanner {
 
     // Creates 2 folders in directory where video files will go in. Does nothing if folders already exist.
     private void verifyFoldersInDirectory() {
-        System.out.println("Verifying subfolders ...");
+        logger.info("Verifying subfolders ...");
         boolean fileOneCreated = videosUploadedName.mkdir();
         boolean fileTwoCreated = videosUnableToUploadName.mkdir();
         if (fileOneCreated && fileTwoCreated) {
-            System.out.println("Created and verified subfolders, " + videosUploadedName.getName() +
+            logger.info("Created and verified subfolders, " + videosUploadedName.getName() +
                     " and " + videosUnableToUploadName.getName() + ", are in directory. " +
                     "Videos will be moved to these folders depending on if they were successfully uploaded or not.");
             return;
@@ -34,7 +37,7 @@ public class DirectoryScanner implements IDirectoryScanner {
         int detectedFolders = 0;
         File[] files = directory.listFiles();
         if (files == null) {
-            System.out.println("Unable to verify or create subfolders that videos are supposed to be moved to.");
+            logger.info("Unable to verify or create subfolders that videos are supposed to be moved to.");
             return;
         }
         for (File f : files) {
@@ -43,9 +46,9 @@ public class DirectoryScanner implements IDirectoryScanner {
             }
         }
         if (detectedFolders == 2) {
-            System.out.println("Verified subfolders are in directory.");
+            logger.info("Verified subfolders are in directory.");
         } else {
-            System.out.println("Unable to verify or create subfolders that videos are supposed to be moved to.");
+            logger.info("Unable to verify or create subfolders that videos are supposed to be moved to.");
         }
     }
 
@@ -82,9 +85,9 @@ public class DirectoryScanner implements IDirectoryScanner {
         Path pathTo = getPathTo(file, folder);
         try {
             Files.move(pathFrom, pathTo);
-            System.out.println("File successfully moved to folder.");
+            logger.info("File successfully moved to folder.");
         } catch (IOException e) {
-            System.out.println("Unable to move file " + file.getName() + " to folder. The problem may be that the file was still uploading when trying to move it.");
+            logger.info("Unable to move file " + file.getName() + " to folder. The problem may be that the file was still uploading when trying to move it.");
             e.printStackTrace();
         }
     }
